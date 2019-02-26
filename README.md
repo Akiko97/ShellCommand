@@ -12,7 +12,7 @@ small dictionary of Linux shell command
 | help    | 幫助信息         |                                                              |
 | cd      | 切換目錄         | [空] 切換至主目錄<br/>~ 切換至主目錄<br/>. 當前目錄<br/>.. 父目錄 |
 | pwd     | 顯示當前目錄     |                                                              |
-| ls      | 列表命令         | -F 明確指示類型<br/>-R 遞歸選項<br/>-a 顯示全部文件<br/>-l 顯示[長列表](長列表)<br/>[過濾器](過濾器)<br/>--time=atime 顯示訪問時間 |
+| ls      | 列表命令         | -F 明確指示類型<br/>-R 遞歸選項<br/>-a 顯示全部文件<br/>-l 顯示[長列表](#長列表)<br/>[過濾器](#過濾器)<br/>--time=atime 顯示訪問時間 |
 | chmod   | 更改權限         |                                                              |
 | chown   | 更改owner        |                                                              |
 | touch   | 創建文件         | 備註：owner為創建者，文件大小為0                             |
