@@ -27,6 +27,8 @@ small dictionary of Linux shell command
 | cat     | 查看文件         | -n 顯示加入行號<br/>-b 只顯示非空行行號<br/>-T 不顯示水平制表符（用^I代替） |
 | more    | 顯示文件         | 空格鍵：逐頁顯示<br/>回車鍵：逐行顯示                        |
 | less    | 分頁工具         | 支持more的全部操作，且支持上下鍵及上下翻頁鍵                 |
+| tail    | 顯示文件尾部     | 默認顯示文件最後10行內容<br/>-n [number] 顯示文件最後number行<br/>-[number] 上面的簡寫<br/>-f 活動監視狀態 |
+| head    | 顯示文件頭部     | 默認顯示文件開頭10行內容<br/>-n [number] 顯示文件開頭number行<br/>-[number] 上面的簡寫<br/>警告：head不支持-f特性 |
 
 ### 長列表
 
