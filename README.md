@@ -121,6 +121,46 @@ directory：掛載點
 
 
 
+## 安全性
+
+| Command  | Description          | Arguments                                                    |
+| -------- | -------------------- | ------------------------------------------------------------ |
+| useradd  | 添加用戶             | 備註：創建用戶及設置用戶HOME目錄結構（默認不創建HOME）（需root權限）<br/>警告：若useradd在/usr/sbin中且該目錄不在PATH中，無法直接訪問useradd<br/>[默認值](#useradd默認值)：/etc/default/useradd<br/>-D 查看默認值<br/>-c *comment* 為用戶添加備註<br/>-d *home_dir* 為主目錄指定名稱<br/>-e *expire_date* 指定過期日期(YYYY-MM-DD)<br/>-f *inactive_days* 指定帳戶密碼過期後多少天後被禁用(0為立即禁用，-1為永不禁用)<br/>-g *initial_group* 指定登錄組GID或組名<br/>-G *group* 指定附加組<br/>-k 與-m一起使用，複製/etc/skel內容至HOME<br/>-m 創建用戶HOME目錄<br/>-M 不創建用戶HOME目錄<br/>-n 創建一個與用戶登錄名相同的新組<br/>-r 創建系統帳戶<br/>-p *password* 為用戶指定默認密碼<br/>-s *shell* 為用戶指定默認登錄shell<br/>-u uid 為用戶指定唯一UID |
+| userdel  | 刪除用戶             | 警告：默認userdel只刪除/etc/passwd中的配置，不刪除用戶文件<br/>-r 刪除用戶HOME及郵件目錄 |
+| usermod  | 修改用戶帳戶字段     | 參數與useradd大致相同<br/>-l 修改用戶帳戶的登錄名<br/>-L 鎖定帳戶（使其不能登錄）<br/>-p 修改帳戶的密碼<br/>-U 解除鎖定 |
+| passwd   | 修改用戶密碼         | passwd *username* 修改username的密碼<br/>passwd 修改自己的密碼<br/>備註：root有權限修改其他帳戶密碼，其餘帳戶只能修改自身密碼<br/>-e 強制用戶下次登錄時修改密碼 |
+| chpasswd | 使用文件修改用戶密碼 | chpasswd < users.txt<br/>從users.txt中讀取userid:passwd字段修改密碼 |
+| chage    | 修改密碼過期日期     | -d 設置上次修改密碼到現在的天數<br/>-E 設置密碼過期的日期<br/>-I 設置密碼過期到鎖定帳戶的天數<br/>-m 設置修改密碼之間至少需要的天數<br/>-W 設置密碼過期前多久開始出現提示信息<br/>日期值的格式：<br/>YYYY-MM-DD<br/>1970-01-01到該日的天數 |
+| chfn     | 修改備註             | 將finger提供的信息存入備註<br/>chfn *username* 詢問並修改備註 |
+| chsh     | 修改默認登錄shell    | 警告：必須使用shell的全路徑名<br/>chsh -s /bin/csh username  |
+| finger   | 查看用戶信息         | 警告：該命令可能被禁用或沒有安裝<br/>finger *username*       |
+
+### useradd默認值
+
+用戶被添加到的GID
+
+用戶的HOME目錄
+
+用戶帳戶密碼過期後不會被禁用
+
+用戶帳戶無國過期日期
+
+使用bash作為用戶默認shell
+
+將/etc/skel中的內容複製到用戶HOME目錄中
+
+為用戶在mail目錄下創建用於接收郵件的文件
+
+修改默認值：（在-D後添加下列參數）
+
+* -b *default_home* 更改默認的HOME目錄位置
+* -e *expiration_date* 更改默認帳戶過期日期
+* -f *inactive* 更改默認帳戶密碼過期至用戶被禁用之間的天數
+* -g *group* 更改用戶默認的GID或組名稱
+* -s *shell* 更改用戶默認的shell
+
+
+
 ## 軟件包
 
 | Command | Description | Arguments |
