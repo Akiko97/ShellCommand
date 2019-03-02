@@ -38,4 +38,34 @@ ls -alF `pwd` > ${today}-PWDLS.log
 #### 內建shell命令不涉及子shell
 
 # 輸入輸出重定向
-# TODO
+
+# 管道
+
+# 數學運算
+var1=10
+var2=20
+var3=$(expr $var2 / $var1)
+echo result: $var3
+var3=$[$var2 * 3]
+echo result: $var3
+echo result: $[1 + 5]
+echo result: $[$var3 / ($var1 + $var2)]
+echo result: $[100 / 45] # bash只支持整數運算
+## 使用bc
+var1=$(echo "scale=4; 3.44 / 5" | bc)
+echo result: $var1
+var1=100
+var2=45
+echo result: $(echo "scale=4; $var1 / $var2" | bc)
+var1=10.46
+var2=43.67
+var3=33.2
+var4=71
+variable=$(bc << EOF
+scale = 4
+a1 = ($var1 * $var2)
+b1 = ($var3 * $var4)
+a1 + b1
+EOF
+)
+echo result: $variable

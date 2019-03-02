@@ -37,6 +37,7 @@ small dictionary of Linux shell command
 | du       | 特定目錄磁盤使用情況查詢 | 默認情況下顯示當前目錄所有文件/目錄/子目錄的磁盤使用情況（磁盤塊為單位）<br/>-c 顯示所有已列出文件的總大小<br/>-h 用戶友好的方式顯示<br/>-s 顯示每個輸出參數的總計 |
 | lsof     | 查看占用磁盤進程         | lsof path/to/device/node<br/>lsof path/to/mount/point        |
 | readlink | 查找鏈接文件             | -f 找到鏈接文件的頂端                                        |
+| wc       | 文本計數                 | 對輸入的文本進行計數<br/>wc < test.txt<br/>輸出：<br/>文本的行數<br/>文本的詞數<br/>文本的字節數 |
 
 ### 長列表
 
@@ -459,4 +460,116 @@ lvcreate選項：
 ## 基本腳本
 
 [script](./script.sh)
+
+### 輸入輸出重定向
+
+command > outputfile 輸出重定向（覆蓋文件）
+
+command >> outputfile 輸出重定向（添加）
+
+command < inputfile 輸入重定向
+
+command << marker 內聯輸入重定向：PS2提示輸入，直到最後一行鍵入marker
+
+### 管道
+
+command1 | command2 將command1的輸出作為command2的輸入
+
+一條命令管道可以使用多個管道：ls /etc/ | sort | more
+
+可以配合重定向：ls /etc/ | sort > etc.list
+
+### 數學運算
+
+expr表達式：expr *operator*
+
+| Operator                 | Description                                          |
+| ------------------------ | ---------------------------------------------------- |
+| ARG1 \| ARG2             | 若ARG1不是null也不是0，返回ARG1，否則返回ARG2        |
+| ARG1 & ARG2              | 沒有參數為null或0，返回ARG1，否則返回0               |
+| ARG1 < ARG2              | 真返回1，假返回0                                     |
+| ARG1 <= ARG2             | 真返回1，假返回0                                     |
+| ARG1 = ARG2              | 真返回1，假返回0                                     |
+| ARG1 != ARG2             | 真返回1，假返回0                                     |
+| ARG1 >= ARG2             | 真返回1，假返回0                                     |
+| ARG1 > ARG2              | 真返回1，假返回0                                     |
+| ARG1 + ARG2              | 返回算術和                                           |
+| ARG1 - ARG2              | 返回算數差                                           |
+| ARG1 * ARG2              | 返回算術積                                           |
+| ARG1 / ARG2              | 返回算術商                                           |
+| ARG1 % ARG2              | 返回模                                               |
+| STRING : REGEXP          | 如果REGEXP匹配到了STRING中的某個模式，返回該模式匹配 |
+| match STRING REGEXP      | 如果REGEXP匹配到了STRING中的某個模式，返回該模式匹配 |
+| substr STRING POS LENGTH | 返回POS開始長度LENGTH的子串                          |
+| index STRING CHARS       | 返回STRING中CHARS字符串的位置，否則返回0             |
+| Length STRING            | 返回STRING長度                                       |
+| + TOKEN                  | 將TOKEN解釋為字符串，即使是個關鍵字                  |
+| (EXPRESSION)             | 返回EXPRESSION的值                                   |
+
+警告：某些操作符（如*）在shell中另有含義，需要轉義：
+
+* expr 5 * 2 # ERROR
+* expr 5 \\* 2
+
+bash保留了Bourne Shell中的expr命令，又兼容方括號表達式（$[operation]）
+
+方括號表達式不需要轉義*等操作符
+
+bash只支持整數運算
+
+zsh可以用於浮點數運算
+
+#### 浮點數運算
+
+使用bash內建計算器bc：
+
+bash計算器是一種編程語言，能夠識別：
+
+* 數字（整數/浮點數）
+* 變量（簡單變量/數組）
+* 注釋（#或/**/）
+* 表達式
+* 編程語句
+* 函數
+
+直接鍵入bc打開計算器，鍵入quit退出bc。
+
+bc -q可以忽略歡迎信息。
+
+浮點運算由內建變量scale控制其保留小數位的個數，scale默認值為0。
+
+print可以用來打印變量和數字。
+
+在腳本中使用bc的基本格式：
+
+```shell
+variable=$(echo "options; expression" | bc)
+```
+
+使用重定向：
+
+```shell
+variable=$(bc << EOF
+options
+statements
+expressions
+EOF
+)
+```
+
+### 退出
+
+退出狀態碼：存儲在專門變量`$?`中，表示上一個已執行的命令的退出碼。
+
+| Status Code | Description                |
+| ----------- | -------------------------- |
+| 0           | 命令成功結束               |
+| 1           | 一般性未知錯誤             |
+| 2           | 不適合的shell命令          |
+| 126         | 命令不可執行               |
+| 127         | 沒找到命令                 |
+| 128         | 無效的退出參數             |
+| 128+x       | 與Linux信號x相關的嚴重錯誤 |
+| 130         | 通過Crtl+C終止的命令       |
+| 255         | 正常範圍之外的退出狀態碼   |
 
