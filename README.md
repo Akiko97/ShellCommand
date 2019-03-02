@@ -459,7 +459,7 @@ lvcreate選項：
 
 ## 基本腳本
 
-[script](./script.sh)
+[base script](./base.sh)
 
 ### 輸入輸出重定向
 
