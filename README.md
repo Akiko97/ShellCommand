@@ -321,9 +321,129 @@ Linux通過`ioctl()`調用來獲取新分區的出現。設置好分區後可以
 
 警告：某些發行版生成新分區後不會提醒Linux系統，需要使用`partprob`或者`hdparm`命令或者重啓系統來更新系統的分區表。
 
-### 文件系統
+### 創建文件系統
 
-// TODO
+| Tools      | Use                      |
+| ---------- | ------------------------ |
+| mkefs      | 創建一個ext文件系統      |
+| mke2fs     | 創建一個ext2文件系統     |
+| mkfs.ext3  | 創建一個ext3文件系統     |
+| mkfs.ext4  | 創建一個ext4文件系統     |
+| mkreiserfs | 創建一個ReiserFS文件系統 |
+| jfs_mkfs   | 創建一個JFS文件系統      |
+| mkfs.xfs   | 創建一個XFS文件系統      |
+| mkfs.zfs   | 創建一個ZFS文件系統      |
+| mkfs.btrfs | 創建一個Btrfs文件系統    |
+
+通過不帶選項的簡單命令創建一個默認的文件系統：
+
+`mkfs.ext4 /dev/sdb1`，需要root權限
+
+可以將新的文件系統掛載到虛擬目錄的任何地方：
+
+```
+mkdir /mnt/my_partition
+mount -t ext4 /dev/sdb1 /mnt/my_partition
+```
+
+重啓系統後文件系統不會自動掛載。
+
+強制Linux在啟動時自動掛載新的文件系統，將其寫入/etc/fstab中。
+
+### 檢查與修復工具fsck
+
+fsck能夠檢測修復ext～ext4、ReiserFS、JFS、XFS等文件系統。
+
+fsck *options filesystem*
+
+filesystem可以包含多個要檢查的文件系統，通過設備名/掛載點/系統分配給文件系統的唯一UUID來引用。
+
+fsck通過/etc/fstab來決定存儲設備的文件系統，或通過-t參數來指定。
+
+| Arguments | Description                                        |
+| --------- | -------------------------------------------------- |
+| -a        | 如果有錯誤，自動修復                               |
+| -A        | 檢查/etc/fstab列出的所有文件系統                   |
+| -C        | 給支持進度條功能的文件系統顯示進度條（ext2、ext3） |
+| -N        | 不進行檢查，只顯示哪些檢查會執行                   |
+| -r        | 出現錯誤時提示                                     |
+| -R        | 使用-A時，跳過根文件系統                           |
+| -s        | 檢查多個文件系統時依次進行檢查                     |
+| -t        | 指定要檢查的文件系統類型                           |
+| -T        | 啟動時不顯示頭部信息                               |
+| -V        | 檢查時顯示詳細輸出                                 |
+| -y        | 檢測到錯誤時自動修復文件系統                       |
+
+警告：fsck只能夠在未掛載的文件系統上運行。若要檢查根文件系統需要使用Linux LiveCD或其他手段（運行的系統的根文件系統不能卸載）
+
+### 邏輯卷管理
+
+#### 1、定義物理卷
+
+使用fdisk的t命令將Linux分區轉換為Linux LVM分區（8e）
+
+#### 2、安裝lvm2軟件包
+
+#### 3、用分區創建PV（物理卷）
+
+pvcreate */dev/sdb1*
+
+使用pvdisplay */dev/sdb1*來查看已創建的PV列表
+
+#### 4、創建VG（卷組）
+
+vgcreate *VGNAME /dev/sdb1*（如：vgcreate Vol1 /dev/sdb1）
+
+使用vgdisplay *VGNAME*（如：vgdisplay Vol1）來查看卷組信息
+
+#### 5、創建LV（邏輯卷）
+
+lvcreate選項：
+
+| Arguments | Arguments    | Description                                                  |
+| --------- | ------------ | ------------------------------------------------------------ |
+| -c        | --chunksize  | 指定快照邏輯卷的單位大小                                     |
+| -C        | --contiguous | 設置或重置連續分配策略                                       |
+| -i        | --stripes    | 指定條帶數                                                   |
+| -I        | --stripesize | 指定每個條帶大小                                             |
+| -l        | --extents    | 指定分配給新邏輯卷的邏輯區段數，或者要用的邏輯區段的百分比<br/>如：-l 100%FREE |
+| -L        | --size       | 指定分配給新邏輯卷的硬盤大小<br/>如：-L xKB/MB/GB            |
+|           | --minor      | 指定設備的次設備號                                           |
+| -m        | --mirrors    | 創建邏輯卷鏡像                                               |
+| -M        | --persistent | 讓次設備號一直有效                                           |
+| -n        | --name       | 指定新邏輯卷名稱<br/>-n lvname                               |
+| -p        | --permission | 為邏輯卷設置r/w權限                                          |
+| -r        | --readahead  | 設置預讀扇區數                                               |
+| -R        | --regionsize | 指定將鏡像分成多大的區                                       |
+| -s        | snapshot     | 創建快照邏輯卷                                               |
+| -z        | --zero       | 將新邏輯卷的前1KB設置為0                                     |
+
+如：lvcreate -l 100%FREE -n lvtest Vol1
+
+使用lvdisplay（如：lvdisplay Vol1）查看邏輯卷詳細情況
+
+#### 6、創建文件系統
+
+如：mkfs.ext4 /dev/Vol1/lvtest
+
+#### 7、裝載
+
+注意裝載的路徑：
+
+如：mount /dev/Vol1/lvtest /mnt/my_partition
+
+#### *8、修改LVM
+
+| Commands | Functions      |
+| -------- | -------------- |
+| vgchange | 激活和禁用VG   |
+| vgremove | 刪除VG         |
+| vgextend | 將PV加入到VG中 |
+| vgreduce | 從VG中刪除PV   |
+| lvextend | 增加LV大小     |
+| lvreduce | 減小LV大小     |
+
+警告：手動增減LV大小需要特別小心。LV中的文件系統需要手動修整來處理大小改變。如ext2～ext4文件系統使用resize2fs程序來格式化文件系統。
 
 
 
