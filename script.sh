@@ -69,3 +69,7 @@ a1 + b1
 EOF
 )
 echo result: $variable
+
+# 退出
+exitcode=0
+exit $exitcode
