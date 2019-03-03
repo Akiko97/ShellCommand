@@ -581,6 +581,46 @@ exit後可跟數字或變量，當大於最大數字255時，取模。
 
 ## 結構化命令
 
+[structured command](./structured_cmd.sh)
+
 ### if-then
 
-// TODO
+```shell
+# 1
+if command
+then
+    commands
+fi
+# 2
+if command; then
+    commands
+fi
+```
+
+if後面的命令運行成功（退出狀態碼為0）則運行then部分的命令被執行。
+
+### if-then-else
+
+```shell
+if command
+then
+    commands
+else
+    commands
+fi
+```
+
+### else-if
+
+```shell
+if command1
+then
+    command_set1
+elif command2
+then
+    command_set2
+else
+    command_set3
+fi
+```
+
