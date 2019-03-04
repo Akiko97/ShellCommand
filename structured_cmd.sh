@@ -24,3 +24,36 @@ elif ls $HOME/.npm/; then
 else
     echo no node finded
 fi
+
+# test
+var=""
+if test $var; then
+	echo ture
+else
+	echo false
+fi
+var="TURE"
+if test $var; then
+	echo ture
+else
+	echo false
+fi
+if [ 1 -gt 5 ]; then
+	echo 1 is greater than 5
+else
+	echo 5 is greater than 1
+fi
+user=akiko
+if [ $USER = $user ]; then
+	echo Welcome $user
+fi
+if [ "baseball" \> "hockey" ]; then
+	echo "baseball > hockey"
+else
+	echo "baseball < hockey"
+fi
+if [ "baseball" \> "Hockey" ]; then
+	echo "baseball > Hockey"
+else
+	echo "baseball < Hockey"
+fi
