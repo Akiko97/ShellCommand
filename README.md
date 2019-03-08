@@ -682,5 +682,19 @@ test可以判斷的三類條件：
 
 #### 文件比較
 
+| Compare         | Description                            |
+| --------------- | -------------------------------------- |
+| -d file         | 檢查file是否存在並是一個目錄           |
+| -e file         | 檢查file是否存在                       |
+| -f file         | 檢查file是否存在並是一個文件           |
+| -r file         | 檢查file是否存在並可讀                 |
+| -s file         | 檢查file是否存在並非空                 |
+| -w file         | 檢查file是否存在並可寫                 |
+| -x file         | 檢查file是否存在並可執行               |
+| -O file         | 檢查file是否存在並屬當前用戶所有       |
+| -G file         | 檢查file是否存在並默認組與當前用戶相同 |
+| file1 -nt file2 | 檢查file1是否比file2新                 |
+| file1 -ot file2 | 檢查file1是否比file2舊                 |
+
 // TODO
 
