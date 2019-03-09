@@ -752,5 +752,39 @@ expression可以是任意數學賦值或比較表達式，可以使用test命令
 
 ### case命令
 
+```shell
+case variable in
+pattern1 | pattern2) commands1;;
+pattern3) commands2;;
+*) default commands;;
+esac
+```
+
+將variable與指定模式進行比較，匹配的執行響應命令。
+
+### for命令
+
+```shell
+# 1
+for var in list
+do
+    commands
+done
+# 2
+for var in list; do
+    commands
+done
+```
+
+#### 直接定義list
+
+// TODO
+
+#### 從變量定義list
+
+// TODO
+
+#### 從命令定義list
+
 // TODO
 

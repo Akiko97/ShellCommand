@@ -91,3 +91,18 @@ fi
 if [[ $USER == a* ]]; then # if USER start with 'a'
 	echo hello $USER
 fi
+
+# case
+user=root
+case $user in
+	akiko | silver )
+		echo Welcome to system, $user
+		;;
+	root )
+		echo Root;;
+	* )
+		echo Permission denied;;
+esac
+
+# for
+# TODO
