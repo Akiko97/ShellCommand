@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # if-then
 if pwd; then
     echo "command worked"
@@ -85,4 +87,7 @@ val1=10
 if (( $val1 ** 2 > 90 )); then
 	(( val2 = $val1 ** 2 ))
 	echo $val2 \> 90
+fi
+if [[ $USER == a* ]]; then # if USER start with 'a'
+	echo hello $USER
 fi
