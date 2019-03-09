@@ -57,3 +57,32 @@ if [ "baseball" \> "Hockey" ]; then
 else
 	echo "baseball < Hockey"
 fi
+if [ -d $HOME/Desktop ]; then # or use -e
+	echo Desktop in HOME
+fi
+if [ -f `pwd`/README.md ]; then # or use -e
+	echo README exist
+fi
+if [ -O /etc/passwd ]; then
+	echo you are the owner of /etc/passwd file
+fi
+if [ -O $(pwd)/README.md ]; then
+	echo you are the owner of $(pwd)/README.md file
+fi
+if [ -G $(pwd)/README.md ]; then
+	echo you are the menber of $(pwd)/README.md file\'s group
+fi
+if [ `pwd`/base.sh -nt `pwd`/structured_cmd.sh ]
+then
+	echo base.sh is newer than structured_cmd.sh
+else
+	echo base.sh is older than structured_cmd.sh
+fi
+if [ -d $HOME ] && [ -f $HOME/.gitconfig ]; then
+	echo using git
+fi
+val1=10
+if (( $val1 ** 2 > 90 )); then
+	(( val2 = $val1 ** 2 ))
+	echo $val2 \> 90
+fi
