@@ -166,4 +166,14 @@ do
 done
 
 # until
-# TODO
+var=100
+until [ $var -eq 0 ]; do
+	echo $var
+	var=$[ $var - 25 ]
+done
+var=100
+until echo $var
+    [ $var -eq 0 ]
+do
+	var=$[ $var - 25 ]
+done

@@ -885,7 +885,7 @@ done
 ### while命令
 
 ```shell
-while test command
+while test commands
 do
     other commands
 done
@@ -918,4 +918,12 @@ done
 
 ### until命令
 
-// TODO
+```shell
+until test commands
+do
+    other commands
+done
+```
+
+test command可以為多條命令，只有最後一條命令的退出狀態碼會被當作檢測條件，每個命令單獨一行
+
