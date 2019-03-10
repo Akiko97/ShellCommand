@@ -125,3 +125,45 @@ list="Alaska California Colorado"
 for test in $list; do
 	echo State: $test
 done
+for test in $(ls $HOME); do
+	echo file/dir $test in $HOME
+done
+IFS.OLD=$IFS
+IFS=$'\n'
+for test in $(ls $HOME); do
+	echo file/dir $test in $HOME
+done
+IFS=$IFS.OLD
+for file in $HOME/.b* $HOME/Desktop $HOME/NoSuchFile; do
+    if [ -d "$file" ]; then
+        echo $file is a directory
+    elif [ -f "$file" ]; then
+        echo $file is a file
+    else
+        echo $file doesn\'t exist
+    fi
+done
+
+# c-for
+for (( a = 1; a < 10; a++ )); do
+	echo num: $a
+done
+for (( a = 1, b=9; a < 10; a++, b-- )); do
+	echo $a + $b = 10
+done
+
+# while
+var=10
+while [ $var -gt 0 ]; do
+    echo $var
+    var=$[ var - 1 ]
+done
+var=10
+while echo $var
+    [ $var -ge 0 ]
+do
+    var=$[ var - 1 ]
+done
+
+# until
+# TODO

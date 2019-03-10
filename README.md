@@ -795,5 +795,127 @@ done
 
 #### 從命令定義list
 
-// TODO
+```shell
+for test in $(ls $HOME); do
+	echo file/dir $test in $HOME
+done
+```
 
+#### 更改分隔符
+
+環境變量內部字段分隔符IFS標明作為字段分隔符的一系列字符，默認為：
+
+* 空格
+* 製表符
+* 換行符
+
+腳本中臨時更改IFS的值來更改字段分隔符，使其只識別換行符：
+
+```shell
+IFS=$'\n'
+```
+
+臨時更改IFS：
+
+```shell
+IFS.OLD=$IFS
+IFS=$'\n'
+# some operation
+IFS=$IFS.OLD
+```
+
+用冒號分隔：
+
+```shell
+IFS=:
+```
+
+設置多個分隔符（換行/冒號/分號/雙引號）
+
+```shell
+IFS=$'\n':;"
+```
+
+#### 通配符讀取目錄
+
+```shell
+for file in $HOME/.b* $HOME/Desktop $HOME/NoSuchFile; do
+    if [ -d "$file" ]; then
+        echo $file is a directory
+    elif [ -f "$file" ]; then
+        echo $file is a file
+    else
+        echo $file doesn\'t exist
+    fi
+done
+```
+
+`if [ -d "$file" ]`中，給file加上雙引號來識別帶空格的文件
+
+### C語言風格for命令
+
+* 變量賦值可以有空格
+* 條件中變量不以$開頭
+* 迭代過程的算式未用expr命令格式
+
+```shell
+for (( variable assignment; condition; iteration process ))
+do
+    commands
+done
+```
+
+如：
+
+```shell
+for (( a = 1; a < 10; a++ ))
+do
+    commands
+done
+```
+
+可以定義迭代多個變量，但條件必須唯一
+
+```shell
+for (( a = 1, b=9; a < 10; a++, b-- )); do
+	echo $a + $b = 10
+done
+```
+
+### while命令
+
+```shell
+while test command
+do
+    other commands
+done
+```
+
+test command與if-then語句中的相同。
+
+注意：必須確保test command的退出碼會隨迭代而改變
+
+```shell
+var=10
+while [ $var -gt 0 ]; do
+    echo $var
+    var=$[ var - 1 ]
+done
+```
+
+test command可以為多條命令，只有最後一條命令的退出狀態碼會被當作檢測條件，每個命令單獨一行
+
+```shell
+var=10
+while echo $var
+    [ $var -ge 0 ]
+do
+    var=$[ var - 1 ]
+done
+```
+
+注意：含有多個條件的while中，所有的測試命令都會被執行，包括測試失敗的最後一次迭代
+
+### until命令
+
+// TODO
