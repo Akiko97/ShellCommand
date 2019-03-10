@@ -105,4 +105,23 @@ case $user in
 esac
 
 # for
-# TODO
+for test in Alaska California Colorado; do
+	echo State: $test
+done
+echo test is: $test
+for test in I don't know if this'll work; do # error
+	echo word: $test
+done
+for test in I don\'t know if "this'll" work; do # okay
+	echo word: $test
+done
+for test in New York New Mexico; do # error
+	echo State: $test
+done
+for test in "New York" "New Mexico"; do # okay
+	echo State: $test
+done
+list="Alaska California Colorado"
+for test in $list; do
+	echo State: $test
+done

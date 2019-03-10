@@ -778,11 +778,20 @@ done
 
 #### 直接定義list
 
-// TODO
+```shell
+for test in Alaska California Colorado; do
+	echo State: $test
+done
+```
 
 #### 從變量定義list
 
-// TODO
+```shell
+list="Alaska California Colorado"
+for test in $list; do
+	echo State: $test
+done
+```
 
 #### 從命令定義list
 
