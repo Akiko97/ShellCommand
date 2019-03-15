@@ -927,3 +927,34 @@ done
 
 test command可以為多條命令，只有最後一條命令的退出狀態碼會被當作檢測條件，每個命令單獨一行
 
+### 循環處理文件數據
+
+* 嵌套循環
+* IFS變量
+
+```shell
+IFS.OLD=$IFS
+IFS=$'\n'
+for entry in $(cat /etc/passwd)
+do
+    echo "Value in $entry -"
+    IFS=:
+    for value in $entry
+    do
+        echo "    $value"
+    done
+done
+IFS=$IFS.OLD
+```
+
+這是一個遍歷passwd文件的例子
+
+### 循環控制
+
+#### break命令
+
+// TODO
+
+#### continue命令
+
+// TODO
