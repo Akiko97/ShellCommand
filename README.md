@@ -1050,3 +1050,174 @@ do
 done < $input
 ```
 
+## 處理用戶輸入
+
+### 命令行參數
+
+bash shell使用位置參數\$0～\$9對應命令行中輸入的參數，其中\$0為程序名，其他表示對應位置的參數值。
+
+```shell
+var=$[ $1 + $2 ]
+echo script $0: $1 + $2 = $var
+```
+
+```
+Output:
+$ add.sh 5 10
+script add.sh: 5 + 10 = 15
+$ ./add.sh 5 10
+script ./add.sh: 5 + 10 = 15
+$ /home/akiko/add.sh 5 10
+script /home/akiko/add.sh: 5 + 10 = 15
+```
+
+```shell
+echo "Hello, $1"
+```
+
+```
+Output:
+$ sayhello.sh 'Shinonome Akiko'
+Hello, Shinonome Akiko
+$ sayhello.sh Akiko
+Hello, Akiko
+```
+
+處理多於9個命令行參數的情況，修改變量名為\${number}，即在數字周圍加上大括號。
+
+處理腳本名稱(\$0)：
+
+```shell
+name=$(basename $0)
+echo script name is $name
+```
+
+```
+Output:
+$ my_script.sh
+script name is my_script.sh
+$ ./my_script.sh
+script name is my_script.sh
+$ /home/akiko/my_script.sh
+script name is my_script.sh
+```
+
+```shell
+name=`basename $0`
+if [ $name = "add" ]
+then
+    result=$[ $1 + $2 ]
+fi
+if [ $name = "sub" ]
+then
+    result=$[ $1 - $2 ]
+fi
+echo $1 $name $2 is $result
+```
+
+```
+Output:
+$ cp my_script.sh add
+$ chmod u+x add
+$ ln -s my_script.sh sub
+$ ./add 2 3
+2 add 3 is 5
+$ ./sub 5 3
+5 sub 3 is 2
+```
+
+當腳本使用了沒有數據的參數時會出現錯誤，應當在使用前進行檢測：
+
+```shell
+if [ -n "$1" ]
+then
+    echo Hello, $1
+else
+    echo Hello, NULL
+fi
+```
+
+```
+Output:
+$ sayhello.sh Akiko
+Hello, Akiko
+$ sayhello.sh
+Hello, NULL
+```
+
+可以使用參數變量\$#獲取命令行參數的個數：
+
+```shell
+echo $#
+```
+
+```
+Output:
+$ my_script.sh
+0
+$ my_script.sh 1 2 3
+3
+$ my_script.sh Shinonome Akiko
+2
+$ my_script.sh "Shinonome Akiko"
+1
+```
+
+可以使用\$#直接獲取最後一個命令行參數，注意：要使用\${!#}而不是${\$#}
+
+```shell
+echo the last parameter is ${!#}
+```
+
+```
+Output:
+$ my_script.sh 1
+the last parameter is 1
+$ my_script.sh
+the last parameter is my_script.sh
+```
+
+或者
+
+```shell
+last=$#
+echo the last parameter is $last
+```
+
+```
+Output:
+$ my_script.sh 5
+the last parameter is 5
+$ my_script.sh
+the last parameter is 0
+```
+
+請注意以上兩種寫法在處理命令行參數為空時的不同。
+
+在處理全部命令行參數時，可以使用\$*和\$@。
+
+* \$*：將命令行參數當成一個字符串保存
+* \$@：將命令行參數保存為一個數組
+
+```shell
+for p in $*
+do
+    echo p
+done
+for p in $@
+do
+    echo p
+done
+```
+
+```
+Output:
+$ my_script.sh 1 3 5 7 9
+1 3 5 7 9
+1
+3
+5
+7
+9
+```
+
