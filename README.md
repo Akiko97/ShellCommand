@@ -953,8 +953,52 @@ IFS=$IFS.OLD
 
 #### break命令
 
-// TODO
+跳出循環。默認跳出一層循環。使用
+
+```shell
+break n
+```
+
+指定跳出的循環層數：
+
+```shell
+for (( a = 1; a < 100; a++ ))
+do
+    echo "Outer Loop $a"
+    for (( b = 1; b < 100; b++ ))
+    do
+        if [$b -eq 3]
+        then
+            break 2
+        fi
+        echo "    Inner Loop $b"
+    done
+done
+```
 
 #### continue命令
 
-// TODO
+提前終止某次循環並進行下一次循環。使用
+
+```shell
+continue n
+```
+
+指定繼續執行哪一級循環：
+
+```shell
+for (( a = 1; a <= 5; a++ ))
+do
+    echo "Iteration $a:"
+    for (( b = 1; b < 3; b++ ))
+    do
+        if [$a -eq 4]
+        then
+            continue 2
+        fi
+        var=$[ $a * $b ]
+        echo "    Result: $a * $b = $var"
+    done
+done
+```
+
