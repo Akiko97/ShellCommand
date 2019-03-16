@@ -1002,3 +1002,51 @@ do
 done
 ```
 
+### 處理循環輸出
+
+可以對循環的輸出進行重定向或使用管道，只需在`done`後加一個處理命令：
+
+```shell
+for (( a = 1; a <= 3; a++ )); do
+    echo "Number is $a"
+done > output.txt
+echo "Script finished"
+```
+
+```shell
+for var in 9 8 3 1 5 6 7
+do
+    echo $var
+done | sort -n
+```
+
+### 成熟的實例
+
+#### 查找PATH下的可執行文件
+
+```shell
+IFS=:
+for folder in $PATH
+do
+    for file in $folder/*
+    do
+        if [-x $file]
+        then
+            echo $file
+        fi
+    done
+done
+```
+
+#### 自動創建帳戶
+
+```shell
+# input file: user
+# format: uid, user_name
+input="user"
+while IFS=',' read -r uid name # read a line
+do
+    useradd -c $name -m $uid
+done < $input
+```
+
