@@ -1447,3 +1447,101 @@ Linux常用選項及其含義，儘量不要更改這些選項的含義：
 | -x      | 排除某個對象                     |
 | -y      | 對所有問題回答yes                |
 
+### 獲取用戶輸入
+
+read命令從標準輸入或另一個文件描述符中接受輸入，將數據放入變量中。
+
+```shell
+echo -n "Enter your name: "
+read name
+echo "Hello, $name!"
+```
+
+或者使用read的-p選項直接提示輸入：
+
+```shell
+read -p "Enter your name: " name
+echo "Hello, $name!"
+```
+
+```
+$ my_script.sh
+Enter your name: Shinonome Akiko
+Hello, Shinonome Akiko
+```
+
+可以使用read讀入多個值：
+
+```shell
+read -p "Input: " input1 input2
+echo $input1
+echo $input2
+```
+
+```
+$ my_script.sh
+Input: one two
+one
+two
+```
+
+```
+$ my_script.sh
+Input: one two three
+one
+two three
+```
+
+read後不指定存入的變量，read會把讀入的值存入環境變量REPLY中：
+
+```shell
+read -p "Enter your name: "
+echo "Hello, $REPLY!"
+```
+
+可以使用`-t second`給read設置一個計時器，超時後read會返回一個非0退出碼：
+
+```shell
+if read -t 5 -p "Enter your name: " name
+then
+    echo "Hello, $name!"
+else
+    echo "To slow!"
+fi
+```
+
+-t 5設置了一個5秒的計時器。
+
+也可以使用`-n`讓read命令統計輸入的字符數量，達到規定字數後退出：
+
+```shell
+read -n1 -p "continue [Y/N]? " answer
+case $answer in
+Y | y) echo "continue..." ;;
+N | n) echo "abort"
+       exit ;;
+esac
+echo "process end."
+```
+
+-n1指定只輸入一個字符。
+
+輸入密碼等內容時可以使用`-s`來隱藏輸入：
+
+```shell
+read -s -p "Input your password" pw
+echo password is $pw
+```
+
+read還可以讀取文件中保存的內容，每次調用都會從文件中讀取一行內容，到達文件結尾後返回非0退出碼，注意如何讀取文件內容：
+
+```shell
+count=1
+cat inputfile | while read line
+do
+    echo "Line $count: $line"
+    count=$[ $count + 1 ]
+done
+echo "EOF"
+```
+
