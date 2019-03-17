@@ -1340,4 +1340,110 @@ $ my_script.sh -ac
 
 #### getopt命令
 
-// TODO
+getopt *optstring* *parameters*
+
+在optstring中依次列出命令行有效的選項字符，在需要參數的選項後面添加一個冒號`:`，getopt會根據optstring解析提供的參數。
+
+```
+$ getopt ab:cd -a -b test -cd ww
+-a -b test -c -d -- ww
+```
+
+指定的選項不在列表中會產生一個錯誤
+
+```
+$ getopt ab:cd -a -b test -cde ww
+getopt: illegal option -- e
+-a -b test -c -d -- ww
+```
+
+可以使用`-q`選項來忽略錯誤
+
+注意：請確認系統加入-q能否正常運行，如果不能，在optstring之前加一個冒號可以忽略錯誤。
+
+腳本中使用getopt和set命令重新設置格式化的命令行參數：
+
+```shell
+set -- $(getopt -q ab:cd "$@")
+# or
+set -- $(getopt -q :ab:cd "$@")
+```
+
+set命令的`—`選項將命令行參數替換成set命令的命令行值。
+
+getopt無法處理帶引號的命令行參數，只能使用空格作為分隔符，可以使用getopts解決這個問題。
+
+#### getopts命令
+
+每次調用getopts一次處理一個參數，直到處理完全部參數返回非0退出碼。
+
+getopts *optstring variable*
+
+在optstring之前加一個冒號可以忽略錯誤。
+
+環境變量OPTARG保存參數值（如果選項需要一個參數值），OPTIND保存參數列表中正在處理的參數位置，以便在處理完選項後再處理其他命令行參數。
+
+```shell
+while getopts :ab:c opt
+do
+    case $opt in
+        a) echo "found option -a" ;;
+        b) echo "found option -b, with paramenter $OPTARG" ;;
+        c) echo "found option -c" ;;
+        *) echo "unknown option $opt" ;;
+    esac
+done
+```
+
+注意：
+
+* case中不需要寫選項前面的`-`；
+* 參數中可以有空格，只需用引號包圍他們；
+* 在選項和參數中間可以沒有空格：`-a -btest`或`-abtest`，同`-a -b test`；
+* 未定義的選項會輸出`?`。
+
+處理完全部選項getopts會退出，可以使用shift和OPTIND來處理剩餘參數：
+
+```shell
+while getopts :ab:cd opt
+do
+    case $opt in
+        a) echo "found option -a" ;;
+        b) echo "found option -b, with paramenter $OPTARG" ;;
+        c) echo "found option -c" ;;
+        d) echo "found option -d" ;;
+        *) echo "unknown option $opt" ;;
+    esac
+done
+
+shift $[ $OPTIND - 1 ]
+count=1
+for param in $@; do
+    echo "parameter #$count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+### 選項標準化
+
+Linux常用選項及其含義，儘量不要更改這些選項的含義：
+
+| Options | Descriptions                     |
+| ------- | -------------------------------- |
+| -a      | 顯示所有對象                     |
+| -c      | 生成一個計數                     |
+| -d      | 指定一個目錄                     |
+| -e      | 擴展一個對象                     |
+| -f      | 指定讀入數據的文件               |
+| -h      | 顯示幫助信息                     |
+| -i      | 忽略文本大小寫                   |
+| -l      | 產生長格式版本輸出               |
+| -n      | 使用非交互模式（批處理）         |
+| -o      | 將所有輸出重定向到指定的輸出文件 |
+| -q      | 以安靜模式運行                   |
+| -r      | 遞歸地處理目錄及文件             |
+| -s      | 以安靜模式運行                   |
+| -v      | 生成詳細輸出                     |
+| -x      | 排除某個對象                     |
+| -y      | 對所有問題回答yes                |
+
