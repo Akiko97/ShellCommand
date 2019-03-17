@@ -1251,3 +1251,93 @@ while [ -n "$1" ]; do
 done
 ```
 
+### 處理選項
+
+*選項*是單破折號後面的單個字母，用來改變命令的行為。
+
+可以用處理命令行參數的方法處理選項。
+
+用case語句來判斷命令行參數是否是選項：
+
+```shell
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "found option -a" ;;
+        -b) echo "found option -b" ;;
+        -c) echo "found option -c" ;;
+         *) echo "$1 is not a option" ;;
+    esac
+    shift
+done
+```
+
+使用雙破折號`--`分離選項和參數：
+
+```
+$ my_script.sh -a -b -c -- para1 para2 para3
+```
+
+處理方法：
+
+```shell
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "found option -a" ;;
+        -b) echo "found option -b" ;;
+        -c) echo "found option -c" ;;
+        --) shift
+            break ;;
+         *) echo "$1 is not a option" ;;
+    esac
+    shift
+done
+
+count=1
+for param in $@; do
+    echo "parameter #$count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+處理帶值的選項：
+
+```
+$ my_script.sh -a -b test -c
+```
+
+方法：
+
+```shell
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "found option -a" ;;
+        -b) param=$2
+            echo "found option -b, with parameter $param"
+            shift ;;
+        -c) echo "found option -c" ;;
+        --) shift
+            break ;;
+         *) echo "$1 is not a option" ;;
+    esac
+    shift
+done
+
+count=1
+for param in $@; do
+    echo "parameter #$count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+這樣處理無法進行選項的合併
+
+```
+$ my_script.sh -ac
+-ac is not a option
+```
+
+使用getopt命令實現這個功能
+
+#### getopt命令
+
+// TODO
